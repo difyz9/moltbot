@@ -7,6 +7,8 @@ import { requireActivePluginRegistry } from "../plugins/runtime.js";
 export const CHAT_CHANNEL_ORDER = [
   "telegram",
   "whatsapp",
+  "wechat",
+  "wecom",
   "discord",
   "googlechat",
   "slack",
@@ -47,6 +49,26 @@ const CHAT_CHANNEL_META: Record<ChatChannelId, ChannelMeta> = {
     docsLabel: "whatsapp",
     blurb: "works with your own number; recommend a separate phone + eSIM.",
     systemImage: "message",
+  },
+  wechat: {
+    id: "wechat",
+    label: "WeChat",
+    selectionLabel: "WeChat (Bot API)",
+    detailLabel: "WeChat Bot",
+    docsPath: "/channels/wechat",
+    docsLabel: "wechat",
+    blurb: "WeChat Official Bot API with QR login support.",
+    systemImage: "message.circle",
+  },
+  wecom: {
+    id: "wecom",
+    label: "WeChat Work",
+    selectionLabel: "WeChat Work (WeCom)",
+    detailLabel: "WeChat Work",
+    docsPath: "/channels/wecom",
+    docsLabel: "wecom",
+    blurb: "WeChat Work (企业微信) with official API support.",
+    systemImage: "briefcase",
   },
   discord: {
     id: "discord",
@@ -104,6 +126,10 @@ export const CHAT_CHANNEL_ALIASES: Record<string, ChatChannelId> = {
   imsg: "imessage",
   "google-chat": "googlechat",
   gchat: "googlechat",
+  wx: "wechat",
+  weixin: "wechat",
+  wecom: "wecom",
+  "we-chat-work": "wecom",
 };
 
 const normalizeChannelKey = (raw?: string | null): string | undefined => {

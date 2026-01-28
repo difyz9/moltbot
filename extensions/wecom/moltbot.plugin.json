@@ -1,0 +1,23 @@
+{
+  "id": "wecom",
+  "name": "WeChat Work",
+  "version": "1.0.0",
+  "description": "WeChat Work (WeCom) channel plugin for Moltbot",
+  "moltbot": {
+    "channel": {
+      "id": "wecom",
+      "label": "WeChat Work",
+      "selectionLabel": "WeChat Work (WeCom)",
+      "detailLabel": "WeCom Bot",
+      "docsPath": "/channels/wecom",
+      "docsLabel": "wecom",
+      "blurb": "WeChat Work enterprise channel with webhook support.",
+      "order": 16,
+      "aliases": ["we-chat-work", "qiye"]
+    },
+    "install": {
+      "npmSpec": "@moltbot/wecom",
+      "localPath": "extensions/wecom"
+    }
+  }
+}

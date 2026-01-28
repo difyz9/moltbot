@@ -1,0 +1,21 @@
+{
+  "name": "@moltbot/wecom",
+  "version": "1.0.0",
+  "description": "WeChat Work (WeCom) channel plugin for Moltbot",
+  "type": "module",
+  "main": "./index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./src/channel": "./src/channel.ts"
+  },
+  "scripts": {},
+  "dependencies": {
+    "clawdbot/plugin-sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "moltbot": "workspace:*"
+  },
+  "peerDependencies": {
+    "moltbot": "*"
+  }
+}

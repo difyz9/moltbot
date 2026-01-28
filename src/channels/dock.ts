@@ -5,6 +5,8 @@ import { resolveSignalAccount } from "../signal/accounts.js";
 import { resolveSlackAccount, resolveSlackReplyToMode } from "../slack/accounts.js";
 import { buildSlackThreadingToolContext } from "../slack/threading-tool-context.js";
 import { resolveTelegramAccount } from "../telegram/accounts.js";
+import type { WeChatAccountConfig } from "../config/types.wechat.js";
+import type { WeComAccountConfig } from "../config/types.wecom.js";
 import { normalizeAccountId } from "../routing/session-key.js";
 import { normalizeE164 } from "../utils.js";
 import { resolveWhatsAppAccount } from "../web/accounts.js";
@@ -21,6 +23,10 @@ import {
   resolveSlackGroupToolPolicy,
   resolveTelegramGroupRequireMention,
   resolveTelegramGroupToolPolicy,
+  resolveWeChatGroupRequireMention,
+  resolveWeChatGroupToolPolicy,
+  resolveWeComGroupRequireMention,
+  resolveWeComGroupToolPolicy,
   resolveWhatsAppGroupRequireMention,
   resolveWhatsAppGroupToolPolicy,
 } from "./plugins/group-mentions.js";
@@ -165,6 +171,53 @@ const DOCKS: Record<ChatChannelId, ChannelDock> = {
     threading: {
       buildToolContext: ({ context, hasRepliedRef }) => {
         const channelId = context.From?.trim() || context.To?.trim() || undefined;
+        return {
+          currentChannelId: channelId,
+          currentThreadTs: context.ReplyToId,
+          hasRepliedRef,
+        };
+      },
+    },
+  },
+  wechat: {
+    id: "wechat",
+    capabilities: {
+      chatTypes: ["direct", "group"],
+      reactions: false,
+      media: true,
+      blockStreaming: true,
+    },
+    outbound: { textChunkLimit: 2048 },
+    config: {
+      resolveAllowFrom: ({ cfg, accountId }) => {
+        const channel = cfg.channels?.wechat as
+          | { accounts?: Record<string, WeChatAccountConfig>; allowFrom?: string[] }
+          | undefined;
+        const normalized = normalizeAccountId(accountId);
+        const account =
+          channel?.accounts?.[normalized] ??
+          channel?.accounts?.[
+            Object.keys(channel?.accounts ?? {}).find(
+              (key) => key.toLowerCase() === normalized.toLowerCase(),
+            ) ?? ""
+          ];
+        return (account?.allowFrom ?? channel?.allowFrom ?? []).map((entry) => String(entry));
+      },
+      formatAllowFrom: ({ allowFrom }) =>
+        allowFrom
+          .map((entry) => String(entry).trim())
+          .filter(Boolean)
+          .map((entry) => entry.replace(/^(wechat|wx):/i, "").toLowerCase()),
+    },
+    groups: {
+      resolveRequireMention: resolveWeChatGroupRequireMention,
+      resolveToolPolicy: resolveWeChatGroupToolPolicy,
+    },
+    threading: {
+      buildToolContext: ({ context, hasRepliedRef }) => {
+        const isDirect = context.ChatType?.toLowerCase() === "direct";
+        const channelId =
+          (isDirect ? (context.From ?? context.To) : context.To)?.trim() || undefined;
         return {
           currentChannelId: channelId,
           currentThreadTs: context.ReplyToId,
@@ -355,6 +408,53 @@ const DOCKS: Record<ChatChannelId, ChannelDock> = {
     groups: {
       resolveRequireMention: resolveIMessageGroupRequireMention,
       resolveToolPolicy: resolveIMessageGroupToolPolicy,
+    },
+    threading: {
+      buildToolContext: ({ context, hasRepliedRef }) => {
+        const isDirect = context.ChatType?.toLowerCase() === "direct";
+        const channelId =
+          (isDirect ? (context.From ?? context.To) : context.To)?.trim() || undefined;
+        return {
+          currentChannelId: channelId,
+          currentThreadTs: context.ReplyToId,
+          hasRepliedRef,
+        };
+      },
+    },
+  },
+  wecom: {
+    id: "wecom",
+    capabilities: {
+      chatTypes: ["direct", "group"],
+      reactions: false,
+      media: true,
+      blockStreaming: true,
+    },
+    outbound: { textChunkLimit: 2048 },
+    config: {
+      resolveAllowFrom: ({ cfg, accountId }) => {
+        const channel = cfg.channels?.wecom as
+          | { accounts?: Record<string, WeComAccountConfig>; allowFrom?: string[] }
+          | undefined;
+        const normalized = normalizeAccountId(accountId);
+        const account =
+          channel?.accounts?.[normalized] ??
+          channel?.accounts?.[
+            Object.keys(channel?.accounts ?? {}).find(
+              (key) => key.toLowerCase() === normalized.toLowerCase(),
+            ) ?? ""
+          ];
+        return (account?.allowFrom ?? channel?.allowFrom ?? []).map((entry) => String(entry));
+      },
+      formatAllowFrom: ({ allowFrom }) =>
+        allowFrom
+          .map((entry) => String(entry).trim())
+          .filter(Boolean)
+          .map((entry) => entry.replace(/^(wecom|we-chat-work):/i, "").toLowerCase()),
+    },
+    groups: {
+      resolveRequireMention: resolveWeComGroupRequireMention,
+      resolveToolPolicy: resolveWeComGroupToolPolicy,
     },
     threading: {
       buildToolContext: ({ context, hasRepliedRef }) => {

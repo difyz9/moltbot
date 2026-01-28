@@ -1,0 +1,24 @@
+{
+  "name": "@moltbot/wechat",
+  "version": "1.0.0",
+  "description": "WeChat channel plugin for Moltbot",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "wechaty": "^1.20.2",
+    "wechaty-puppet-wechat": "^1.18.4",
+    "file-box": "^1.4.15"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0",
+    "clawdbot/plugin-sdk": "workspace:*"
+  },
+  "peerDependencies": {
+    "clawdbot": "workspace:*"
+  }
+}

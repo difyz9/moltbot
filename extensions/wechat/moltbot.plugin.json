@@ -1,0 +1,23 @@
+{
+  "id": "wechat",
+  "name": "WeChat",
+  "version": "1.0.0",
+  "description": "WeChat channel plugin for Moltbot",
+  "moltbot": {
+    "channel": {
+      "id": "wechat",
+      "label": "WeChat",
+      "selectionLabel": "WeChat (Bot API)",
+      "detailLabel": "WeChat Bot",
+      "docsPath": "/channels/wechat",
+      "docsLabel": "wechat",
+      "blurb": "WeChat Official Bot API support.",
+      "order": 15,
+      "aliases": ["wx", "weixin"]
+    },
+    "install": {
+      "npmSpec": "@moltbot/wechat",
+      "localPath": "extensions/wechat"
+    }
+  }
+}
